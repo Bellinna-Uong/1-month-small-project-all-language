@@ -1,0 +1,66 @@
+<!--starter-->
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <meta http-equiv = "X-UA-Compatible" content="IE=edge">
+    <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "index.css"> <!--css est la référence de code pour le front-->
+    <title>Weather</title> <!--choix du titre-->
+</head>
+
+<body>
+
+<div class="title-bar">
+  <span>Météo</span>
+  <button id="close-btn">✕</button>
+</div>
+
+<label for="checkbox" class = "toggler">
+    <input type="checkbox" id="checkbox" class="theme-toggler-checkbox">
+    <span class="ball"></span>
+</label>
+
+<div class = "container">
+    <div class = "search-box">
+        <span class="icon icon-earth">🌍</span>
+        <input type="text" placeholder="Enter a place...">
+        <button class="search-btn">🔍</button>
+    </div>
+
+    <div class="not-found">
+        <img src="assets/404.png">
+        <p>Oops honey ! I didn't find the place ! ( ꩜ ᯅ ꩜;)⁭ ⁭</p>
+    </div>
+
+    <div class="weather-box">
+        <img src="">
+        <p class ="temperature"></p>
+        <p class ="description"></p>
+    </div>
+
+    <div class="weather-details">
+        <div class="humidity">
+            <span class="icon">💧</span>
+            <div class="text">
+                <span></span>
+                <p>Humidity</p>
+            </div>
+        </div>
+
+        <div class="wind">
+            <span class="icon">🌬️</span>
+            <div class="text">
+                <span></span>
+                <p>Wind Speed</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="index.js"></script> 
+</body>
+
+
+</html>

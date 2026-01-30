@@ -1,0 +1,90 @@
+body {
+    background-color: #fff5f7; /* Rose bébé très clair */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden; /* Empêche tout scroll */
+}
+
+.calculator {
+    background: #ffffff;
+    padding: 15px; /* Réduit pour plus de compacité */
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+    border: 3px solid #ffd1dc; /* Bordure rose pastel */
+    width: 280px; /* Taille fixe plus petite */
+}
+
+#display {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+    text-align: right;
+    margin-bottom: 15px;
+    border: none;
+    background-color: #fff9fa;
+    border-radius: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #ff4d6d;
+    font-weight: bold;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px; /* Espace réduit entre les boutons */
+}
+
+button {
+    height: 50px;
+    width: 50px;
+    border-radius: 15px; /* Moins rond, plus "candy bar" */
+    border: none;
+    background-color: #ffe5ec;
+    color: #ff4d6d;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 0 #ffc2d1;
+}
+
+button:hover {
+    background-color: #ffc2d1;
+}
+
+button:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0;
+}
+
+.btn-operator {
+    background-color: #ffb3c1;
+    color: white;
+    box-shadow: 0 3px 0 #ff8fa3;
+}
+
+.btn-special {
+    background-color: #ff8fa3;
+    color: white;
+    box-shadow: 0 3px 0 #ff758f;
+}
+
+#equal {
+    background: linear-gradient(135deg, #ff8fa3, #ff4d6d);
+    color: white;
+    grid-row: span 2;
+    height: 108px; /* Ajusté pour la nouvelle grille */
+    border-radius: 15px;
+    box-shadow: 0 3px 0 #c9184a;
+}
+
+.zero {
+    grid-column: span 2;
+    width: 108px;
+    border-radius: 15px;
+}

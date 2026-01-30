@@ -1,0 +1,216 @@
+* {
+    border: 0;
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5ebe0; /* Beige Café clair */
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    transition: 0.4s ease;
+}
+
+/* Barre de titre Electron */
+.title-bar {
+    width: 320px;
+    height: 35px;
+    background: #eddfd1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    border-radius: 18px 18px 0 0;
+    -webkit-app-region: drag;
+    color: #6b4e3f;
+    border: 1px solid #d5bdaf;
+    border-bottom: none;
+}
+
+#close-btn {
+    background: transparent;
+    color: #6b4e3f;
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+
+#close-btn:hover { color: #af5d48; }
+
+/* Conteneur Principal */
+.container {
+    position: relative;
+    width: 320px;
+    height: 100px; /* Taille initiale réduite */
+    background-color: #ffffff;
+    padding: 25px;
+    overflow: hidden;
+    border-radius: 0 0 18px 18px;
+    border: 1px solid #d5bdaf;
+    box-shadow: 0 10px 25px rgba(107, 78, 63, 0.1);
+    transition: 0.6s ease-out;
+}
+
+/* Barre de Recherche */
+.search-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f5ebe0;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.search-box .icon {
+    color: #6b4e3f;
+    font-size: 18px;
+    position: static; /* Replacé correctement */
+}
+
+.search-box input {
+    background: transparent;
+    color: #6b4e3f;
+    width: 80%;
+    font-size: 13px;
+    padding: 8px;
+}
+
+.search-box input::placeholder { color: #b79d8a; }
+
+.search-box .search-btn {
+    cursor: pointer;
+    background: #d5bdaf;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 14px;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-box .search-btn:hover { background: #6b4e3f; }
+
+/* Infos Météo */
+.weather-box { text-align: center; margin-top: 20px; }
+
+.weather-box img { width: 50%; filter: sepia(0.3); }
+
+.weather-box .temperature {
+    color: #6b4e3f;
+    font-size: 45px;
+    font-weight: 300;
+    margin: 10px 0;
+}
+
+.weather-box .description {
+    color: #a39184;
+    font-size: 18px;
+    font-style: italic;
+    text-transform: capitalize;
+}
+
+/* Détails (Humidité/Vent) */
+.weather-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    background: #fdfaf7;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.weather-details .humidity, .weather-details .wind {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-details .icon { color: #d5bdaf; font-size: 20px; }
+
+.weather-details span { color: #6b4e3f; font-size: 16px; font-weight: bold; }
+
+.weather-details p { color: #a39184; font-size: 11px; }
+
+/* Hide results and 404 by default; shown by JS when appropriate */
+.not-found { display: none; text-align: center; }
+.weather-box { display: none; }
+.weather-details { display: none; }
+
+/* Bouton Thème (Repositionné pour Electron) */
+.toggler {
+    display: block;
+    width: 50px;
+    height: 25px;
+    border: 1px solid #d5bdaf;
+    border-radius: 30px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    background: #ffffff;
+    z-index: 100;
+}
+
+.ball {
+    width: 19px;
+    height: 19px;
+    background-color: #d5bdaf;
+    border-radius: 50%;
+    left: 2px;
+    transition: 0.3s ease;
+}
+
+.theme-toggler-checkbox { display: none; }
+
+.ball {
+    width: 19px;
+    height: 19px;
+    background-color: #d5bdaf;
+    border-radius: 50%;
+    left: 2px;
+    transition: 0.3s ease;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ball::after {
+    content: "☀";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    transition: 0.3s ease;
+}
+
+.theme-toggler-checkbox:checked + .ball {
+    transform: translate(25px, -50%);
+}
+
+.theme-toggler-checkbox:checked + .ball::after {
+    content: "🌙";
+}
+
+/* Thème Nuit (Café Noir) */
+body.nuit { background-color: #2c2520; }
+body.nuit .container { background-color: #3d342e; border-color: #5a4d44; }
+body.nuit .title-bar { background-color: #1a1614; color: #d5bdaf; }
+body.nuit .search-box { background-color: #4a4039; }
+body.nuit .search-box input { color: #f5ebe0; }
+body.nuit .weather-box .temperature, body.nuit .weather-box .description { color: #f5ebe0; }
+
+.not-found img { width: 70%; margin-bottom: 10px; }
+.not-found p { color: #6b4e3f; font-size: 16px; font-style: italic; }
+
+.fadeIn { animation: 0.5s fadeIn forwards; }
+@keyframes fadeIn { to { scale: 1; opacity: 1; } }
