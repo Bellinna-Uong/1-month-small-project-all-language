@@ -10,13 +10,12 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #f5ebe0; /* Beige Café clair */
+    background-color: #f5ebe0; 
     height: 100vh;
     font-family: 'Segoe UI', Tahoma, sans-serif;
     transition: 0.4s ease;
 }
 
-/* Barre de titre Electron */
 .title-bar {
     width: 320px;
     height: 35px;
@@ -46,7 +45,7 @@ body {
 .container {
     position: relative;
     width: 320px;
-    height: 100px; /* Taille initiale réduite */
+    height: 100px; 
     background-color: #ffffff;
     padding: 25px;
     overflow: hidden;
@@ -56,7 +55,6 @@ body {
     transition: 0.6s ease-out;
 }
 
-/* Barre de Recherche */
 .search-box {
     width: 100%;
     display: flex;
@@ -70,7 +68,7 @@ body {
 .search-box .icon {
     color: #6b4e3f;
     font-size: 18px;
-    position: static; /* Replacé correctement */
+    position: static; 
 }
 
 .search-box input {
@@ -140,12 +138,10 @@ body {
 
 .weather-details p { color: #a39184; font-size: 11px; }
 
-/* Hide results and 404 by default; shown by JS when appropriate */
 .not-found { display: none; text-align: center; }
 .weather-box { display: none; }
 .weather-details { display: none; }
 
-/* Bouton Thème (Repositionné pour Electron) */
 .toggler {
     display: block;
     width: 50px;
@@ -201,7 +197,6 @@ body {
     content: "🌙";
 }
 
-/* Thème Nuit (Café Noir) */
 body.nuit { background-color: #2c2520; }
 body.nuit .container { background-color: #3d342e; border-color: #5a4d44; }
 body.nuit .title-bar { background-color: #1a1614; color: #d5bdaf; }

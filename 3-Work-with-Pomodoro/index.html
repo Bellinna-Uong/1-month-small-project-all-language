@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Study Timer ✏️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="floating-icons">
+        <span class="float-icon" style="top: 10%; left: 15%;">✏️</span>
+        <span class="float-icon" style="top: 20%; right: 20%;">📝</span>
+        <span class="float-icon" style="top: 70%; left: 10%;">📚</span>
+        <span class="float-icon" style="top: 80%; right: 15%;">✨</span>
+        <span class="float-icon" style="top: 40%; left: 5%;">🎯</span>
+        <span class="float-icon" style="top: 60%; right: 8%;">💡</span>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-icon">📖</div>
+            <h1>Pomodoro Study Timer</h1>
+            <p class="subtitle">Stay focused and achieve your goals!</p>
+        </header>
+
+        <div class="timer-card">
+            <div class="timer-display">
+                <span id="minutes">25</span>
+                <span class="separator">:</span>
+                <span id="seconds">00</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="controls">
+                <div class="time-settings">
+                    <div class="setting-section">
+                        <h3 class="section-title">🎯 Working hours</h3>
+                        <div class="time-inputs">
+                            <div class="input-group">
+                                <label for="workMinutesInput">Minutes</label>
+                                <input type="number" id="workMinutesInput" min="1" max="180" value="25">
+                            </div>
+                            <div class="input-group">
+                                <label for="workSecondsInput">Seconds</label>
+                                <input type="number" id="workSecondsInput" min="0" max="59" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-section">
+                        <h3 class="section-title">☕ Break time</h3>
+                        <div class="time-inputs">
+                            <div class="input-group">
+                                <label for="breakMinutesInput">Minutes</label>
+                                <input type="number" id="breakMinutesInput" min="1" max="60" value="5">
+                            </div>
+                            <div class="input-group">
+                                <label for="breakSecondsInput">Secondes</label>
+                                <input type="number" id="breakSecondsInput" min="0" max="59" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">
+                        <span class="btn-icon">▶️</span>
+                        Start
+                    </button>
+                    <button id="pauseBtn" class="btn btn-secondary" disabled>
+                        <span class="btn-icon">⏸️</span>
+                        Pause
+                    </button>
+                    <button id="resetBtn" class="btn btn-tertiary">
+                        <span class="btn-icon">🔄</span>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div class="session-info">
+                <p id="statusText">✨ Ready to begin</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>💪 You can do it! Every minute counts.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

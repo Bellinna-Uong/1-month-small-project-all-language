@@ -11,7 +11,7 @@ function createWindow() {
     frame: false,
     alwaysOnTop: true,
     transparent: true,
-    show: true, // ✅ la fenêtre s'affiche
+    show: true, 
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false

@@ -11,13 +11,10 @@ search.addEventListener('click', () => {
     if (city === '')
         return;
 
-    // Faire la requête à l'API OpenWeather
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKey}`)
         .then(response => {
-            // Si la réponse n'est pas OK (exemple: 404), on la traite ici
             if (!response.ok) {
                 if (response.status === 404) {
-                    // Gérer l'affichage de l'erreur 404
                     container.style.height = '400px';
                     weatherBox.style.display = 'none';
                     weatherDetails.style.display = 'none';
@@ -29,7 +26,6 @@ search.addEventListener('click', () => {
             return response.json();
         })
         .then(json => {
-            // Si nous recevons une bonne réponse (pas d'erreur 404), traiter les données météo
             error404.style.display = 'none';
             error404.classList.remove('fadeIn');
 
@@ -64,7 +60,6 @@ search.addEventListener('click', () => {
             humidity.innerHTML = `${json.main.humidity}%`;
             wind.innerHTML = `${parseInt(json.wind.speed)}Km/h`;
 
-            // Afficher explicitement les sections (CSS les cache par défaut)
             weatherBox.style.display = 'block';
             weatherDetails.style.display = 'flex';
             weatherBox.classList.add('fadeIn');
