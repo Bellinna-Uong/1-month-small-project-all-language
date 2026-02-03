@@ -1,4 +1,4 @@
-// Éléments du DOM
+// DOM elements
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
 const workMinutesInput = document.getElementById('workMinutesInput');
@@ -11,24 +11,24 @@ const resetBtn = document.getElementById('resetBtn');
 const statusText = document.getElementById('statusText');
 const progressFill = document.getElementById('progressFill');
 
-// Variables d'état
+// State variables
 let totalSeconds = 0;
 let remainingSeconds = 0;
 let timerInterval = null;
 let isRunning = false;
 let isPaused = false;
-let isBreakMode = false; // Nouveau : mode pause ou travail
+let isBreakMode = false; // New: break mode or work mode
 
-// Sons (optionnel - utilise l'API Web Audio)
+// Sounds (optional - uses Web Audio API)
 let audioContext = null;
 
-// Initialisation
+// Initialization
 function init() {
     updateDisplayFromInputs();
     setupEventListeners();
 }
 
-// Configuration des écouteurs d'événements
+// Setup event listeners
 function setupEventListeners() {
     startBtn.addEventListener('click', startTimer);
     pauseBtn.addEventListener('click', pauseTimer);
@@ -37,17 +37,17 @@ function setupEventListeners() {
     workMinutesInput.addEventListener('change', updateDisplayFromInputs);
     workSecondsInput.addEventListener('change', updateDisplayFromInputs);
     breakMinutesInput.addEventListener('change', () => {
-        // Validation uniquement
+        // Validation only
         if (breakMinutesInput.value < 1) breakMinutesInput.value = 1;
         if (breakMinutesInput.value > 60) breakMinutesInput.value = 60;
     });
     breakSecondsInput.addEventListener('change', () => {
-        // Validation uniquement
+        // Validation only
         if (breakSecondsInput.value < 0) breakSecondsInput.value = 0;
         if (breakSecondsInput.value > 59) breakSecondsInput.value = 59;
     });
     
-    // Empêcher les valeurs négatives
+    // Prevent negative values
     workMinutesInput.addEventListener('input', function() {
         if (this.value < 1) this.value = 1;
         if (this.value > 180) this.value = 180;
@@ -69,22 +69,22 @@ function setupEventListeners() {
     });
 }
 
-// Mettre à jour l'affichage à partir des inputs
+// Update the display from input fields
 function updateDisplayFromInputs() {
     if (!isRunning) {
         const minutes = parseInt(workMinutesInput.value) || 0;
         const seconds = parseInt(workSecondsInput.value) || 0;
-        
+
         totalSeconds = minutes * 60 + seconds;
         remainingSeconds = totalSeconds;
-        
+
         updateDisplay();
         updateProgressBar();
         updateTimerCardStyle();
     }
 }
 
-// Mettre à jour le style de la carte selon le mode
+// Update timer card styling based on mode
 function updateTimerCardStyle() {
     const timerCard = document.querySelector('.timer-card');
     if (isBreakMode) {
@@ -96,16 +96,16 @@ function updateTimerCardStyle() {
     }
 }
 
-// Mettre à jour l'affichage du temps
+// Update time display
 function updateDisplay() {
     const minutes = Math.floor(remainingSeconds / 60);
     const seconds = remainingSeconds % 60;
-    
+
     minutesDisplay.textContent = minutes.toString().padStart(2, '0');
     secondsDisplay.textContent = seconds.toString().padStart(2, '0');
 }
 
-// Mettre à jour la barre de progression
+// Update the progress bar
 function updateProgressBar() {
     if (totalSeconds > 0) {
         const percentage = (remainingSeconds / totalSeconds) * 100;
@@ -113,271 +113,271 @@ function updateProgressBar() {
     }
 }
 
-// Démarrer le minuteur
+// Start the timer
 function startTimer() {
     if (!isRunning || isPaused) {
-        // Si c'est un nouveau démarrage, récupérer les valeurs des inputs
+        // If this is a fresh start, read inputs
         if (!isRunning) {
             updateDisplayFromInputs();
-            
+
             if (totalSeconds === 0) {
-                statusText.textContent = '💭 Choisis un temps d\'abord !';
+                statusText.textContent = '💭 Choose a time first!';
                 return;
             }
         }
-        
+
         isRunning = true;
         isPaused = false;
-        
-        // Désactiver les inputs
+
+        // Disable inputs
         workMinutesInput.disabled = true;
         workSecondsInput.disabled = true;
         breakMinutesInput.disabled = true;
         breakSecondsInput.disabled = true;
-        
-        // Mettre à jour les boutons
+
+        // Update buttons
         startBtn.disabled = true;
         pauseBtn.disabled = false;
-        
-        // Mettre à jour le statut selon le mode
+
+        // Update status based on mode
         if (isBreakMode) {
-            statusText.textContent = '☕ Pause en cours... Détends-toi !';
+            statusText.textContent = '☕ Break in progress... Relax!';
         } else {
-            statusText.textContent = '🎯 Session en cours...';
+            statusText.textContent = '🎯 Session in progress...';
         }
-        
-        // Démarrer le compte à rebours
+
+        // Start the countdown
         timerInterval = setInterval(countdown, 1000);
     }
 }
 
-// Mettre en pause le minuteur
+// Pause the timer
 function pauseTimer() {
     if (isRunning && !isPaused) {
         isPaused = true;
         clearInterval(timerInterval);
-        
+
         startBtn.disabled = false;
         pauseBtn.disabled = true;
-        
-        statusText.textContent = '☕ Petite pause...';
+
+        statusText.textContent = '☕ Paused...';
     }
 }
 
-// Réinitialiser le minuteur
+// Reset the timer
 function resetTimer() {
-    // Arrêter le minuteur
+    // Stop the timer
     clearInterval(timerInterval);
     isRunning = false;
     isPaused = false;
-    isBreakMode = false; // Retour au mode travail
-    
-    // Réactiver les inputs
+    isBreakMode = false; // Back to work mode
+
+    // Re-enable inputs
     workMinutesInput.disabled = false;
     workSecondsInput.disabled = false;
     breakMinutesInput.disabled = false;
     breakSecondsInput.disabled = false;
-    
-    // Réinitialiser les boutons
+
+    // Reset buttons
     startBtn.disabled = false;
     pauseBtn.disabled = true;
-    
-    // Réinitialiser l'affichage
+
+    // Reset display
     updateDisplayFromInputs();
-    
-    statusText.textContent = '✨ Prêt à recommencer';
-    
-    // Réinitialiser la barre de progression
+
+    statusText.textContent = '✨ Ready to start';
+
+    // Reset progress bar
     progressFill.style.width = '100%';
-    
-    // Réinitialiser le style de la carte
+
+    // Reset card style
     updateTimerCardStyle();
 }
 
-// Compte à rebours
+// Countdown logic
 function countdown() {
     if (remainingSeconds > 0) {
         remainingSeconds--;
         updateDisplay();
         updateProgressBar();
-        
-        // Changer le message quand il reste peu de temps
+
+        // Change message when time is low
         if (isBreakMode) {
             if (remainingSeconds === 60) {
-                statusText.textContent = '⏰ Plus qu\'une minute de pause !';
+                statusText.textContent = '⏰ One minute left of break!';
             } else if (remainingSeconds === 10) {
-                statusText.textContent = '🔜 La pause se termine bientôt...';
+                statusText.textContent = '🔜 Break ending soon...';
             }
         } else {
             if (remainingSeconds === 60) {
-                statusText.textContent = '⏰ Plus qu\'une minute ! Tu y es presque';
+                statusText.textContent = '⏰ One minute left! Almost there';
             } else if (remainingSeconds === 10) {
-                statusText.textContent = '🎉 Dernières secondes ! Tu assures !';
+                statusText.textContent = '🎉 Final seconds! You got this!';
             }
         }
     } else {
-        // Le minuteur est terminé
+        // Timer finished
         timerComplete();
     }
 }
 
-// Minuteur terminé
+// Timer completed handler
 function timerComplete() {
     clearInterval(timerInterval);
-    
-    // Jouer un son
+
+    // Play a sound
     playCompletionSound();
-    
+
     if (!isBreakMode) {
-        // Fin du temps de travail -> Passer en mode pause
+        // End of work session -> switch to break mode
         isBreakMode = true;
-        
-        // Message de fin de session de travail
-        statusText.textContent = '🌟 Session terminée ! C\'est l\'heure de la pause ☕';
+
+        // Work session finished message
+        statusText.textContent = '🌟 Session complete! Time for a break ☕';
         animateCompletion();
-        
+
         // Notification
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('🎉 Pomodoro terminé !', {
-                body: 'Bravo ! Ta session est terminée. Prends une petite pause bien méritée ! ☕',
+            new Notification('🎉 Pomodoro complete!', {
+                body: 'Great job! Your session ended. Take a well-deserved break! ☕',
                 icon: '📖'
             });
         }
-        
-        // Effet visuel temporaire
+
+        // Visual effect
         progressFill.style.width = '0%';
-        
-        // Attendre 2 secondes puis démarrer la pause automatiquement
+
+        // Wait 2 seconds then start the break automatically
         setTimeout(() => {
             startBreakTimer();
         }, 2000);
-        
+
     } else {
-        // Fin de la pause -> Retour au mode travail
+        // End of break -> return to work mode
         isBreakMode = false;
         isRunning = false;
         isPaused = false;
-        
-        // Réactiver les inputs
+
+        // Re-enable inputs
         workMinutesInput.disabled = false;
         workSecondsInput.disabled = false;
         breakMinutesInput.disabled = false;
         breakSecondsInput.disabled = false;
-        
-        // Mettre à jour les boutons
+
+        // Update buttons
         startBtn.disabled = false;
         pauseBtn.disabled = true;
-        
-        // Message de fin de pause
-        statusText.textContent = '💪 Pause terminée ! Prêt à reprendre ?';
-        
+
+        // Break finished message
+        statusText.textContent = '💪 Break finished! Ready to resume?';
+
         // Notification
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('⏰ Pause terminée !', {
-                body: 'C\'est reparti ! Prêt pour une nouvelle session de travail ? 💪',
+            new Notification('⏰ Break finished!', {
+                body: 'Back to it! Ready for another work session? 💪',
                 icon: '📖'
             });
         }
-        
-        // Réinitialiser l'affichage avec le temps de travail
+
+        // Reset display to work time
         updateDisplayFromInputs();
         animateCompletion();
         updateTimerCardStyle();
     }
 }
 
-// Démarrer le timer de pause
+// Start the break timer
 function startBreakTimer() {
     const breakMinutes = parseInt(breakMinutesInput.value) || 0;
     const breakSeconds = parseInt(breakSecondsInput.value) || 0;
-    
+
     totalSeconds = breakMinutes * 60 + breakSeconds;
     remainingSeconds = totalSeconds;
-    
+
     if (totalSeconds === 0) {
-        // Si pas de temps de pause défini, retour au mode travail
-        statusText.textContent = '⚠️ Aucun temps de pause défini !';
+        // If no break time defined, return to work mode
+        statusText.textContent = '⚠️ No break time set!';
         isBreakMode = false;
         isRunning = false;
-        
+
         workMinutesInput.disabled = false;
         workSecondsInput.disabled = false;
         breakMinutesInput.disabled = false;
         breakSecondsInput.disabled = false;
         startBtn.disabled = false;
         pauseBtn.disabled = true;
-        
+
         updateDisplayFromInputs();
         updateTimerCardStyle();
         return;
     }
-    
+
     updateDisplay();
     updateProgressBar();
     updateTimerCardStyle();
-    
+
     isRunning = true;
     isPaused = false;
-    
-    statusText.textContent = '☕ Pause en cours... Détends-toi !';
-    
-    // Désactiver les inputs pendant la pause
+
+    statusText.textContent = '☕ Break in progress... Relax!';
+
+    // Disable inputs during break
     workMinutesInput.disabled = true;
     workSecondsInput.disabled = true;
     breakMinutesInput.disabled = true;
     breakSecondsInput.disabled = true;
-    
-    // Activer le bouton pause
+
+    // Enable pause button
     startBtn.disabled = true;
     pauseBtn.disabled = false;
-    
-    // Démarrer le compte à rebours
+
+    // Start the countdown
     timerInterval = setInterval(countdown, 1000);
 }
 
-// Jouer un son à la fin
+// Play a sound when the timer completes
 function playCompletionSound() {
     try {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
-        
-        // Créer une mélodie simple
+
+        // Create a simple melody
         const now = audioContext.currentTime;
-        
-        // Trois notes pour signaler la fin
-        playNote(523.25, now, 0.2); // Do
-        playNote(659.25, now + 0.25, 0.2); // Mi
-        playNote(783.99, now + 0.5, 0.4); // Sol
-        
+
+        // Three notes to signal completion
+        playNote(523.25, now, 0.2); // C
+        playNote(659.25, now + 0.25, 0.2); // E
+        playNote(783.99, now + 0.5, 0.4); // G
+
     } catch (error) {
-        console.log('Audio non disponible');
+        console.log('Audio not available');
     }
 }
 
-// Jouer une note
+// Play a single note
 function playNote(frequency, startTime, duration) {
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    
+
     oscillator.frequency.value = frequency;
     oscillator.type = 'sine';
-    
+
     gainNode.gain.setValueAtTime(0.3, startTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-    
+
     oscillator.start(startTime);
     oscillator.stop(startTime + duration);
 }
 
-// Animation de fin
+// Completion animation
 function animateCompletion() {
     let count = 0;
     const originalText = statusText.textContent;
-    
+
     const flashInterval = setInterval(() => {
         count++;
         if (count % 2 === 0) {
@@ -387,7 +387,7 @@ function animateCompletion() {
             statusText.style.color = '#c4a570';
             statusText.style.textShadow = 'none';
         }
-        
+
         if (count >= 6) {
             clearInterval(flashInterval);
             statusText.style.color = '#c4a570';
@@ -396,23 +396,23 @@ function animateCompletion() {
     }, 300);
 }
 
-// Demander la permission pour les notifications
+// Request notification permission
 if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
 }
 
-// Initialiser l'application
+// Initialize the application
 init();
 
-// Gestion du focus de la page (mettre en pause si l'utilisateur quitte l'onglet)
+// Page visibility handling (log when user leaves the tab)
 document.addEventListener('visibilitychange', function() {
     if (document.hidden && isRunning && !isPaused) {
-        // L'utilisateur a quitté l'onglet mais le timer continue
-        console.log('Timer continue en arrière-plan');
+        // User left the tab but the timer continues
+        console.log('Timer continues in the background');
     }
 });
 
-// Sauvegarder l'état dans le localStorage (optionnel)
+// Save state to localStorage (optional)
 window.addEventListener('beforeunload', function() {
     if (isRunning) {
         localStorage.setItem('pomodoroState', JSON.stringify({
@@ -424,19 +424,19 @@ window.addEventListener('beforeunload', function() {
     }
 });
 
-// Restaurer l'état au chargement (optionnel)
+// Restore state on load (optional)
 window.addEventListener('load', function() {
     const savedState = localStorage.getItem('pomodoroState');
     if (savedState) {
         const state = JSON.parse(savedState);
         const elapsedTime = Math.floor((Date.now() - state.timestamp) / 1000);
-        
-        // Demander à l'utilisateur s'il veut reprendre
-        if (confirm('Hey ! 👋 Tu veux reprendre ta session précédente ?')) {
+
+        // Ask user if they want to resume the previous session
+        if (confirm('Hey! 👋 Do you want to resume your previous session?')) {
             remainingSeconds = Math.max(0, state.remainingSeconds - elapsedTime);
             totalSeconds = state.totalSeconds;
             isBreakMode = state.isBreakMode || false;
-            
+
             if (remainingSeconds > 0) {
                 updateDisplay();
                 updateProgressBar();
@@ -445,7 +445,7 @@ window.addEventListener('load', function() {
                 resetTimer();
             }
         }
-        
+
         localStorage.removeItem('pomodoroState');
     }
 });
