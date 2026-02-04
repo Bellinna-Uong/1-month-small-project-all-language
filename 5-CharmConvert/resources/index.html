@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Unit Converter</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌟 Unit Converter 🌟</h1>
+            <p class="subtitle">Simple and cute ✨</p>
+        </header>
+
+        <main>
+            <div class="category-selector">
+                <button class="category-btn active" data-category="distance">
+                    📏 Distance
+                </button>
+                <button class="category-btn" data-category="weight">
+                    ⚖️ Weight
+                </button>
+                <button class="category-btn" data-category="volume">
+                    🧪 Volume
+                </button>
+                <button class="category-btn" data-category="temperature">
+                    🌡️ Temperature
+                </button>
+            </div>
+
+            <div class="converter-box">
+                <div class="input-group">
+                    <label for="fromValue">From:</label>
+                    <div class="input-row">
+                        <input type="number" id="fromValue" placeholder="Enter a value" value="0">
+                        <select id="fromUnit" class="unit-select">
+                            <!-- Dynamic options -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="swap-button-container">
+                    <button id="swapBtn" class="swap-btn" title="Swap">
+                        🔄
+                    </button>
+                </div>
+
+                <div class="input-group">
+                    <label for="toValue">To:</label>
+                    <div class="input-row">
+                        <input type="number" id="toValue" placeholder="Result" readonly>
+                        <select id="toUnit" class="unit-select">
+                            <!-- Dynamic options -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="result-info" id="resultInfo"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/neutralino.js"></script>
+    <script src="js/converter.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

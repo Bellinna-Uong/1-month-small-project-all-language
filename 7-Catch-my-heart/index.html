@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Catcher Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        
+        #gameCanvas {
+            border: 4px solid white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom, #1e3c72 0%, #2a5298 100%);
+            cursor: none;
+        }
+        
+        .game-info {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .score {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .game-over h2 {
+            margin: 0 0 20px 0;
+            font-size: 36px;
+            color: #ff4757;
+        }
+        
+        .game-over button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .game-over button:hover {
+            background: #764ba2;
+        }
+        
+        .instructions {
+            margin-top: 15px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Catch My Heart!</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <div class="game-info">
+        <div class="score">Score: <span id="scoreDisplay">0</span></div>
+        <div class="score" style="margin-top: 10px;">Time: <span id="timerDisplay">1:00</span></div>
+        <div class="instructions">Move your mouse left/right to catch the hearts! ❤️</div>
+    </div>
+    
+    <div class="game-over" id="gameOver">
+        <h2>Finish!</h2>
+        <p>Final Score: <span id="finalScore" class="score">0</span></p>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Game variables
+        let score = 0;
+        let gameRunning = true;
+        let hearts = [];
+        let timeLeft = 60; // 60 seconds = 1 minute
+        let timerInterval = null;
+        let basket = {
+            x: canvas.width / 2 - 50,
+            y: canvas.height - 80,
+            width: 100,
+            height: 60,
+            speed: 8
+        };
+        
+        let mouseX = canvas.width / 2;
+        
+        // Timer function
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (gameRunning) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        endGame();
+                    }
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function endGame() {
+            gameRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').style.display = 'block';
+        }
+        
+        // Heart class
+        class Heart {
+            constructor() {
+                this.x = Math.random() * (canvas.width - 30);
+                this.y = -30;
+                this.size = 25 + Math.random() * 15;
+                this.speed = 2 + Math.random() * 3;
+                this.color = this.getRandomHeartColor();
+            }
+            
+            getRandomHeartColor() {
+                const colors = ['#ff6b9d', '#ff4757', '#ff3838', '#c44569', '#f8b500'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                
+                // Draw heart shape
+                const x = this.x;
+                const y = this.y;
+                const size = this.size;
+                
+                ctx.moveTo(x, y + size / 4);
+                ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + size / 4);
+                ctx.bezierCurveTo(x - size / 2, y + size / 2, x, y + size * 0.75, x, y + size);
+                ctx.bezierCurveTo(x, y + size * 0.75, x + size / 2, y + size / 2, x + size / 2, y + size / 4);
+                ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + size / 4);
+                
+                ctx.fill();
+                
+                // Add shine effect
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.beginPath();
+                ctx.arc(x - size / 6, y + size / 6, size / 8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            isOffScreen() {
+                return this.y > canvas.height;
+            }
+            
+            isCaught(basket) {
+                return this.y + this.size > basket.y &&
+                       this.y < basket.y + basket.height &&
+                       this.x > basket.x &&
+                       this.x < basket.x + basket.width;
+            }
+        }
+        
+        // Draw basket
+        function drawBasket() {
+            // Basket body
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+            
+            // Basket weave pattern
+            ctx.strokeStyle = '#654321';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(basket.x, basket.y + i * 12);
+                ctx.lineTo(basket.x + basket.width, basket.y + i * 12);
+                ctx.stroke();
+            }
+            
+            // Basket handle
+            ctx.strokeStyle = '#8b4513';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(basket.x + basket.width / 2, basket.y - 10, 30, Math.PI, 0);
+            ctx.stroke();
+            
+            // Basket rim
+            ctx.fillStyle = '#a0522d';
+            ctx.fillRect(basket.x - 5, basket.y - 5, basket.width + 10, 10);
+        }
+        
+        // Spawn hearts
+        function spawnHeart() {
+            if (gameRunning && Math.random() < 0.03) {
+                hearts.push(new Heart());
+            }
+        }
+        
+        // Update game
+        function update() {
+            if (!gameRunning) return;
+            
+            // Move basket towards mouse
+            const targetX = mouseX - basket.width / 2;
+            const dx = targetX - basket.x;
+            
+            if (Math.abs(dx) > 2) {
+                basket.x += dx * 0.15;
+            }
+            
+            // Keep basket within bounds
+            if (basket.x < 0) basket.x = 0;
+            if (basket.x + basket.width > canvas.width) {
+                basket.x = canvas.width - basket.width;
+            }
+            
+            // Update hearts
+            for (let i = hearts.length - 1; i >= 0; i--) {
+                hearts[i].update();
+                
+                // Check if caught
+                if (hearts[i].isCaught(basket)) {
+                    score += 10;
+                    document.getElementById('scoreDisplay').textContent = score;
+                    hearts.splice(i, 1);
+                    
+                    // Particle effect
+                    createParticles(basket.x + basket.width / 2, basket.y);
+                }
+                // Check if missed
+                else if (hearts[i].isOffScreen()) {
+                    hearts.splice(i, 1);
+                    // Lose a life or end game
+                    if (score > 0) {
+                        score -= 5;
+                        document.getElementById('scoreDisplay').textContent = score;
+                    }
+                }
+            }
+            
+            // Spawn new hearts
+            spawnHeart();
+        }
+        
+        // Particle effect
+        let particles = [];
+        
+        function createParticles(x, y) {
+            for (let i = 0; i < 10; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    life: 30,
+                    color: `hsl(${Math.random() * 60 + 320}, 100%, 70%)`
+                });
+            }
+        }
+        
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+        
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life / 30;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            });
+        }
+        
+        // Draw everything
+        function draw() {
+            // Clear canvas completely
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1e3c72');
+            gradient.addColorStop(1, '#2a5298');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw stars background
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            for (let i = 0; i < 50; i++) {
+                const x = (i * 137.5) % canvas.width;
+                const y = (i * 197.3) % canvas.height;
+                ctx.beginPath();
+                ctx.arc(x, y, 1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw hearts
+            hearts.forEach(heart => heart.draw());
+            
+            // Draw basket
+            drawBasket();
+            
+            // Draw particles
+            drawParticles();
+        }
+        
+        // Game loop
+        function gameLoop() {
+            update();
+            draw();
+            updateParticles();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Mouse movement
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+        });
+        
+        // Touch support for mobile
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.touches[0].clientX - rect.left;
+        });
+        
+        // Restart game
+        function restartGame() {
+            score = 0;
+            timeLeft = 60;
+            hearts = [];
+            gameRunning = true;
+            clearInterval(timerInterval);
+            document.getElementById('scoreDisplay').textContent = score;
+            updateTimerDisplay();
+            document.getElementById('gameOver').style.display = 'none';
+            basket.x = canvas.width / 2 - 50;
+            startTimer();
+        }
+        
+        // Start game
+        startTimer();
+        gameLoop();
+    </script>
+</body>
+</html>

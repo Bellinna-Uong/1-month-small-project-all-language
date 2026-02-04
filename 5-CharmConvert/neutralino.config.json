@@ -1,0 +1,43 @@
+{
+  "applicationId": "com.converter.unitconverter",
+  "version": "1.0.0",
+  "defaultMode": "window",
+  "port": 0,
+  "documentRoot": "/resources/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "tokenSecurity": "one-time",
+  "logging": {
+    "enabled": true,
+    "writeToLogFile": true
+  },
+  "nativeAllowList": [
+    "app.*",
+    "os.*",
+    "window.*"
+  ],
+  "modes": {
+    "window": {
+      "title": "🌟 Unit Converter",
+      "width": 600,
+      "height": 700,
+      "minWidth": 500,
+      "minHeight": 600,
+      "resizable": true,
+      "exitProcessOnClose": true,
+      "borderless": false,
+      "alwaysOnTop": false,
+      "fullScreen": false,
+      "maximizable": true
+    }
+  },
+  "cli": {
+    "binaryName": "unit-converter",
+    "resourcesPath": "/resources/",
+    "extensionsPath": "/extensions/",
+    "clientLibrary": "/resources/js/neutralino.js",
+    "binaryVersion": "5.0.0",
+    "clientVersion": "5.0.0"
+  }
+}

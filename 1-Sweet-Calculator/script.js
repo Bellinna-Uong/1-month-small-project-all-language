@@ -14,7 +14,6 @@ function deleteLast() {
 
 function calculate() {
     try {
-        // eval() est utilisé ici pour la simplicité du projet
         display.value = eval(display.value);
     } catch (error) {
         display.value = "Erreur ❤️";
