@@ -1,0 +1,21 @@
+{
+  "name": "love-potion-sweeper",
+  "version": "1.0.0",
+  "description": "A romantic minesweeper game built with React and Neutralino",
+  "main": "index.html",
+  "scripts": {
+    "dev": "neu run",
+    "build": "neu build"
+  },
+  "keywords": [
+    "minesweeper",
+    "game",
+    "react",
+    "neutralino"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@neutralinojs/neu": "^10.0.0"
+  }
+}
